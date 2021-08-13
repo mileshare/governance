@@ -14,7 +14,7 @@ contract MileShare {
     uint8 public constant decimals = 18;
 
     /// @notice Total number of tokens in circulation
-    uint public totalSupply = 100_000_000e18; // 1 billion Uni
+    uint public totalSupply = 100_000_000e18; // 1 billion MILE
 
     /// @notice Address which may mint new tokens
     address public minter;
@@ -77,7 +77,7 @@ contract MileShare {
     event Approval(address indexed owner, address indexed spender, uint256 amount);
 
     /**
-     * @notice Construct a new Uni token
+     * @notice Construct a new MILE token
      * @param account The initial account to grant all the tokens
      * @param minter_ The account with minting ability
      * @param mintingAllowedAfter_ The timestamp after which minting may occur
