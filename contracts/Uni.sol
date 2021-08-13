@@ -3,7 +3,7 @@ pragma experimental ABIEncoderV2;
 
 import "./SafeMath.sol";
 
-contract Uni {
+contract MileShare {
     /// @notice EIP-20 token name for this token
     string public constant name = "MileShare";
 
