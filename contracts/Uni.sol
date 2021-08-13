@@ -129,6 +129,24 @@ contract Uni {
     }
 
     /**
+     * @notice Burn tokens
+     * @param src The address of the source account
+     * @param rawAmount The number of tokens to be burned
+     */
+    function burn(address src, uint rawAmount) external {
+        // burn the amount
+        uint96 amount = safe96(rawAmount, "Uni::burn: amount exceeds 96 bits");
+        totalSupply = safe96(SafeMath.sub(totalSupply, amount), "Uni::burn: totalSupply underflow");
+
+        // transfer the amount from the recipient
+        balances[src] = sub96(balances[src], amount, "Uni::mint: transfer amount underflows");
+        emit Transfer(src, address(0), amount);
+
+        // move delegates
+        _moveDelegates(delegates[src], address(0), amount);
+    }
+
+    /**
      * @notice Get the number of tokens `spender` is approved to spend on behalf of `account`
      * @param account The address of the account holding the funds
      * @param spender The address of the account spending the funds
