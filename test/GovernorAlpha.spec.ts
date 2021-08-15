@@ -18,19 +18,19 @@ describe('GovernorAlpha', () => {
   const [wallet] = provider.getWallets()
   const loadFixture = createFixtureLoader([wallet], provider)
 
-  let uni: Contract
+  let mile: Contract
   let timelock: Contract
   let governorAlpha: Contract
   beforeEach(async () => {
     const fixture = await loadFixture(governanceFixture)
-    uni = fixture.uni
+    mile = fixture.mile
     timelock = fixture.timelock
     governorAlpha = fixture.governorAlpha
   })
 
-  it('uni', async () => {
-    const balance = await uni.balanceOf(wallet.address)
-    const totalSupply = await uni.totalSupply()
+  it('mile', async () => {
+    const balance = await mile.balanceOf(wallet.address)
+    const totalSupply = await mile.totalSupply()
     expect(balance).to.be.eq(totalSupply)
   })
 
@@ -48,7 +48,7 @@ describe('GovernorAlpha', () => {
     expect(votingPeriod).to.be.eq(40320)
     const timelockAddress = await governorAlpha.timelock()
     expect(timelockAddress).to.be.eq(timelock.address)
-    const uniFromGovernor = await governorAlpha.uni()
-    expect(uniFromGovernor).to.be.eq(uni.address)
+    const mileFromGovernor = await governorAlpha.mile()
+    expect(mileFromGovernor).to.be.eq(mile.address)
   })
 })
