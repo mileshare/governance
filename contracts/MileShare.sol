@@ -129,17 +129,41 @@ contract MileShare {
     }
 
     /**
-     * @notice Burn tokens
-     * @param src The address of the source account
-     * @param rawAmount The number of tokens to be burned
+     * @notice Burn `amount` tokens from the caller
+     * @param rawAmount The number of tokens to burn
      */
-    function burn(address src, uint rawAmount) external {
-        // burn the amount
-        uint96 amount = safe96(rawAmount, "MILE::burn: amount exceeds 96 bits");
-        totalSupply = safe96(SafeMath.sub(totalSupply, amount), "MILE::burn: totalSupply underflow");
+    function burn(uint256 rawAmount) external {
+        uint96 amount = safe96(rawAmount, "MILE::burn: rawAmount exceeds 96 bits");
+        _burn(msg.sender, amount);
+    }
 
-        // transfer the amount from the recipient
-        balances[src] = sub96(balances[src], amount, "MILE::mint: transfer amount underflows");
+    /**
+     * @notice Burn `amount` tokens from `account`, deducting from the caller's allowance
+     * @param src The address of the account to burn from
+     * @param rawAmount The number of tokens to burn
+     */
+    function burnFrom(address src, uint256 rawAmount) external {
+        uint96 amount = safe96(rawAmount, "MILE::burnFrom: rawAmount exceeds 96 bits");
+
+        uint96 decreasedAllowance = sub96(allowances[src][msg.sender], amount, "MILE::burnFrom: amount underflow");
+        allowances[src][msg.sender] = decreasedAllowance;
+        emit Approval(src, msg.sender, decreasedAllowance);
+
+        _burn(src, amount);
+    }
+
+    /**
+     * @notice Burn `amount` tokens from `account`, reducing the total supply
+     * @param src The address of the account to burn from
+     * @param amount The number of tokens to burn
+     */
+    function _burn(address src, uint96 amount) internal {
+        require(src != address(0), "MILE::_burn: burn from the zero address");
+
+        uint96 supply = safe96(totalSupply, "MILE::_burn: old supply exceeds 96 bits");
+        totalSupply = sub96(supply, amount, "MILE::_burn: amount exceeds totalSupply");
+
+        balances[src] = sub96(balances[src], amount, "MILE::_burn: amount underflow");
         emit Transfer(src, address(0), amount);
 
         // move delegates
