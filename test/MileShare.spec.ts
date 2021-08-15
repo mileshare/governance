@@ -160,7 +160,6 @@ describe('MileShare', () => {
     expect(await mint.balanceOf(wallet.address)).to.be.eq(balanceBefore.sub(1))
     expect(await mint.totalSupply()).to.be.eq(supply.sub(1))
 
-    balanceBefore = await mint.balanceOf(wallet.address)
     await mint.connect(wallet).approve(other0.address, 100)
     await expect(mint.connect(other0).burnFrom(wallet.address, 101)).to.be.revertedWith(
       'MILE::burnFrom: amount underflow'
