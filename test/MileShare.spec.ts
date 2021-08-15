@@ -120,4 +120,67 @@ describe('MileShare', () => {
     // cannot mint 2.01%
     await expect(mile.mint(wallet.address, supply.mul(mintCap.add(1)))).to.be.revertedWith('MILE::mint: exceeded mint cap')
   })
+
+
+  it('burn', async () => {
+    const { timestamp: now } = await provider.getBlock('latest')
+    const mint = await deployContract(wallet, MileShare, [wallet.address, wallet.address, now + 60 * 60])
+    const supply = await mint.totalSupply()
+
+    let balanceBefore = await mint.balanceOf(wallet.address)
+    await mint.connect(wallet).burn(0)
+    expect(await mint.balanceOf(wallet.address)).to.be.eq(balanceBefore)
+    expect(await mint.totalSupply()).to.be.eq(supply)
+
+    await mint.connect(wallet).burn(1)
+    expect(await mint.balanceOf(wallet.address)).to.be.eq(balanceBefore.sub(1))
+    expect(await mint.totalSupply()).to.be.eq(supply.sub(1))
+
+    await expect(mint.connect(wallet).burn(supply + 2)).to.be.revertedWith('MILE::_burn: amount exceeds totalSupply')
+
+    await mint.connect(wallet).transfer(other0.address, 100)
+    balanceBefore = await mint.balanceOf(wallet.address)
+    await expect(mint.connect(wallet).burn(balanceBefore.add(1))).to.be.revertedWith(
+      'MILE::_burn: amount underflow'
+    )
+  })
+
+  it('burnFrom', async () => {
+    const { timestamp: now } = await provider.getBlock('latest')
+    const mint = await deployContract(wallet, MileShare, [wallet.address, wallet.address, now + 60 * 60])
+    const supply = await mint.totalSupply()
+
+    let balanceBefore = await mint.balanceOf(wallet.address)
+    await mint.connect(other0).burnFrom(wallet.address, 0)
+    expect(await mint.balanceOf(wallet.address)).to.be.eq(balanceBefore)
+    expect(await mint.totalSupply()).to.be.eq(supply)
+
+    await mint.connect(wallet).approve(other0.address, 100)
+    await mint.connect(other0).burnFrom(wallet.address, 1)
+    expect(await mint.balanceOf(wallet.address)).to.be.eq(balanceBefore.sub(1))
+    expect(await mint.totalSupply()).to.be.eq(supply.sub(1))
+
+    balanceBefore = await mint.balanceOf(wallet.address)
+    await mint.connect(wallet).approve(other0.address, 100)
+    await expect(mint.connect(other0).burnFrom(wallet.address, 101)).to.be.revertedWith(
+      'MILE::burnFrom: amount underflow'
+    )
+
+    balanceBefore = await mint.balanceOf(wallet.address)
+    await mint.connect(wallet).approve(other0.address, balanceBefore.add(1))
+    await expect(mint.connect(other0).burnFrom(wallet.address, balanceBefore.add(1))).to.be.revertedWith(
+      'MILE::_burn: amount exceeds totalSupply'
+    )
+
+    await mint.connect(wallet).transfer(other0.address, 100)
+    balanceBefore = await mint.balanceOf(wallet.address)
+    await mint.connect(wallet).approve(other0.address, balanceBefore.add(1))
+    await expect(mint.connect(other0).burnFrom(wallet.address, balanceBefore.add(1))).to.be.revertedWith(
+      'MILE::_burn: amount underflow'
+    )
+
+    await expect(mint.connect(wallet).burnFrom('0x0000000000000000000000000000000000000000', 0)).to.be.revertedWith(
+      'MILE::_burn: burn from the zero address'
+    )
+  })
 })
