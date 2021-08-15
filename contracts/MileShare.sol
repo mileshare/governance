@@ -14,7 +14,7 @@ contract MileShare {
     uint8 public constant decimals = 18;
 
     /// @notice Total number of tokens in circulation
-    uint public totalSupply = 100_000_000e18; // 1 billion MILE
+    uint public totalSupply = 100_000_000e18; // 100 million MILE
 
     /// @notice Address which may mint new tokens
     address public minter;
