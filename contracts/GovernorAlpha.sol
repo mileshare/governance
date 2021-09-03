@@ -20,10 +20,10 @@ contract GovernorAlpha {
     /// @notice The duration of voting on a proposal, in blocks
     function votingPeriod() public pure returns (uint) { return 40_320; } // ~7 days in blocks (assuming 15s blocks)
 
-    /// @notice The address of the Uniswap Protocol Timelock
+    /// @notice The address of the MileShare Timelock
     TimelockInterface public timelock;
 
-    /// @notice The address of the Uniswap governance token
+    /// @notice The address of the MileShare governance token
     MileShareInterface public mile;
 
     /// @notice The total number of proposals

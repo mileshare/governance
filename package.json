@@ -1,8 +1,8 @@
 {
-  "name": "@uniswap/governance",
+  "name": "@mileshare/governance",
   "version": "1.0.2",
-  "description": "🏛 Governance contracts for the Uniswap protocol",
-  "author": "Noah Zinsmeister",
+  "description": "🏛 Governance contracts for the MileShare",
+  "author": "MileShare",
   "license": "MIT",
   "files": [
     "build"
