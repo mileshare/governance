@@ -8,7 +8,7 @@ module.exports= {
  networks: {
   hardhat: {},
   rinkeby: {
-   url: "https://rinkeby.infura.io/v3/d355bf426d534bccb6e9b0f69c7b1625",
+   url: `https://rinkeby.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
    accounts: [process.env.PRIVATE_KEY],
   },
   mumbai: {
@@ -20,10 +20,8 @@ module.exports= {
    accounts: [process.env.PRIVATE_KEY],
   },
   mainnet: {
-   url: "https://mainnet.infura.io/v3/d355bf426d534bccb6e9b0f69c7b1625",
+   url: `https://mainnet.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
    accounts: [process.env.PRIVATE_KEY],
-   // gasPrice: 50000000000, // 50 gwei
-   gasPrice: 15000000000, // 15 gwei
   },
  },
  solidity: {
