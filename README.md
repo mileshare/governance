@@ -14,13 +14,13 @@ Forked from
 ### MileShare ($MILE) 
 
 ```
-$ npx hardhat run network [network] script/deploy-mileshare
+$ npx hardhat run --network [network] script/deploy-mileshare
 ```
 
 ### TreasuryVester
 
 ```
-$ npx hardhat run network [network] script/deploy-treasury-vester
+$ npx hardhat run --network [network] script/deploy-treasury-vester
 ```
 
 ## Verify 
